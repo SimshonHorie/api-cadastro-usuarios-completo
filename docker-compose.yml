@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    networks:
+      - challenge_net
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - challenge_net
+
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    networks:
+      - challenge_net
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq_queue
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - challenge_net
+
+  # SERVIÇO DO WORKER AUTOMÁTICO
+  queue-worker:
+    build: .
+    container_name: laravel_worker
+    restart: always
+    # O comando abaixo garante que ele processe a fila 'emails' automaticamente
+    command: php artisan queue:work rabbitmq --queue=emails --tries=3
+    volumes:
+      - .:/var/www
+    depends_on:
+      - app
+      - rabbitmq
+      - db
+    networks:
+      - challenge_net
+
+networks:
+  challenge_net:
+    driver: bridge

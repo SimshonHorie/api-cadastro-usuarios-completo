@@ -19,26 +19,37 @@ Ferramentas de Teste: Mailpit (Captura de e-mails via SMTP local)
 Siga os comandos abaixo para subir o ambiente do zero:
 
 1. Clonar e Configurar
+   
 git clone https://github.com/SimshonHorie/api-cadastro-usuarios-completo.git
+
 cd api-cadastro-usuarios-completo
+
 cp .env.example .env
 
-2. Subir o Ambiente Docker
+3. Subir o Ambiente Docker
+   
 Este comando irá construir as imagens e subir todos os serviços (App, Banco, Redis, RabbitMQ, Mailpit e Worker):
+
 docker compose up -d --build
 
-3. Instalar Dependências e Gerar Chave
+5. Instalar Dependências e Gerar Chave
+   
 docker compose exec app composer install
+
 docker compose exec app npm install
+
 docker compose exec app npm run build
+
 docker compose exec app php artisan key:generate
 
-4. Migrações e Dados de Teste (Seeder)
+7. Migrações e Dados de Teste (Seeder)
+   
 O comando abaixo limpa o banco e cria usuários automáticos via Factories, incluindo um Administrador:
 
 docker compose exec app php artisan migrate:fresh --seed
 
 🔑 Acessos e Ferramentas
+
 Aplicação: http://localhost:8000
 
 Mailpit (Ver E-mails de Boas-vindas): http://localhost:8025
@@ -46,6 +57,7 @@ Mailpit (Ver E-mails de Boas-vindas): http://localhost:8025
 RabbitMQ Dashboard: http://localhost:15672 (user: guest | pass: guest)
 
 Credenciais de Teste
+
 Admin: admin@teste.com | Senha: password
 
 Usuarios Criados: (email criado) | (senha criada)
@@ -61,22 +73,33 @@ Os dados do usuário recém-criado são armazenados no Redis com um tempo de exp
 O sistema detecta se quem está criando o usuário é um Administrador. Se for, a sessão do Admin é preservada, permitindo a criação de múltiplos usuários em sequência sem perder o login.
 
 📂 Comandos Úteis de Debug
+
 Monitorar Fila em tempo real:
+
 docker compose logs -f queue-worker
 
 Verificar dados no Redis:
+
 docker compose exec redis redis-cli keys *
 
 Acessar Banco via Terminal:
+
 docker compose exec db psql -U root -d laravel_db
 
 Mas pode conectar via Dbeaver com as seguintes informações:
+
 1 - HOST (localhost)
+
 2 - Banco de dados (laravel_db)
+
 3 - Porta (5432)
+
 4 - Nome de usuário (root)
+
 5 - senha (password)
+
 ![alt text](image.png)
+
 Instalar os drivers que pede e testar conexão
 
 

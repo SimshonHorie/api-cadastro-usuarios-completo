@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EnviarEmailBoasVindas implements ShouldQueue
 {
@@ -20,6 +21,11 @@ class EnviarEmailBoasVindas implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info("E-mail de boas-vindas enviado para: {$this->user->email}");
+        Mail::raw("Olá {$this->user->nome}, bem-vindo ao sistema!", function ($message) {
+            $message->to($this->user->email)
+                    ->subject('Boas-vindas ao Desafio!');
+        });
+
+        Log::info("E-mail de boas-vindas enviado para: " . $this->user->email);
     }
 }

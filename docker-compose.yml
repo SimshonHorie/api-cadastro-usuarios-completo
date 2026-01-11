@@ -23,6 +23,8 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
     networks:
       - challenge_net
 
@@ -41,12 +43,10 @@ services:
     networks:
       - challenge_net
 
-  # SERVIÇO DO WORKER AUTOMÁTICO
   queue-worker:
     build: .
     container_name: laravel_worker
     restart: always
-    # O comando abaixo garante que ele processe a fila 'emails' automaticamente
     command: php artisan queue:work rabbitmq --queue=emails --tries=3
     volumes:
       - .:/var/www
@@ -54,6 +54,15 @@ services:
       - app
       - rabbitmq
       - db
+    networks:
+      - challenge_net
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    container_name: mailpit_server
+    ports:
+      - "8025:8025"
+      - "1025:1025"
     networks:
       - challenge_net
 

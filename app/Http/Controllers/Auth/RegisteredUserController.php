@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+use App\Jobs\EnviarEmailBoasVindas;
 
 class RegisteredUserController extends Controller
 {
@@ -31,21 +34,22 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nome' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'nome' => $request->nome,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+        Redis::setex('usuario:' . $user->id, 300, json_encode($user));
+        EnviarEmailBoasVindas::dispatch($user)->onConnection('rabbitmq');
+
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('login')->with('status', 'Cadastro realizado com sucesso! Por favor, faça o login.');
     }
 }

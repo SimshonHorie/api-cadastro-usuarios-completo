@@ -84,7 +84,9 @@ docker compose logs -f queue-worker
 
 Verificar dados no Redis:
 
-docker compose exec redis redis-cli keys *
+docker compose exec redis redis-cli 
+
+keys *
 
 Acessar Banco via Terminal:
 

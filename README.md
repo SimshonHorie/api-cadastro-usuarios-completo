@@ -26,13 +26,13 @@ cd api-cadastro-usuarios-completo
 
 cp .env.example .env
 
-3. Subir o Ambiente Docker
+2. Subir o Ambiente Docker
    
 Este comando irá construir as imagens e subir todos os serviços (App, Banco, Redis, RabbitMQ, Mailpit e Worker):
 
 docker compose up -d --build
 
-5. Instalar Dependências e Gerar Chave
+3. Instalar Dependências e Gerar Chave
    
 docker compose exec app composer install
 
@@ -42,7 +42,7 @@ docker compose exec app npm run build
 
 docker compose exec app php artisan key:generate
 
-7. Migrações e Dados de Teste (Seeder)
+4. Migrações e Dados de Teste (Seeder)
    
 O comando abaixo limpa o banco e cria usuários automáticos via Factories, incluindo um Administrador:
 

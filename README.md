@@ -56,7 +56,7 @@ Mailpit (Ver E-mails de Boas-vindas): http://localhost:8025
 
 RabbitMQ Dashboard: http://localhost:15672 (user: guest | pass: guest)
 
-Credenciais de Teste
+Credenciais de Teste da aplicação:
 
 Admin: admin@teste.com | Senha: password
 

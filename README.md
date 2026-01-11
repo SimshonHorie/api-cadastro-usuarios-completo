@@ -64,13 +64,16 @@ Usuarios Criados: (email criado) | (senha criada)
 
 💡 Fluxos Implementados
 
-📩 Envio de E-mail (RabbitMQ)
+📩 Envio de E-mail (RabbitMQ):
+
 Ao cadastrar um novo usuário (seja via registro público ou pelo painel do Admin), um Job chamado EnviarEmailBoasVindas é despachado para a fila do RabbitMQ. O container laravel_worker processa essa tarefa e o e-mail aparece instantaneamente no Mailpit.
 
-⚡ Cache de Performance (Redis)
+⚡ Cache de Performance (Redis):
+
 Os dados do usuário recém-criado são armazenados no Redis com um tempo de expiração (TTL) de 5 minutos, simulando um ambiente de alta disponibilidade onde evitamos consultas desnecessárias ao banco de dados para dados lidos frequentemente.
 
-🛡️ Gestão de Sessão (Admin vs User)
+🛡️ Gestão de Sessão (Admin vs User):
+
 O sistema detecta se quem está criando o usuário é um Administrador. Se for, a sessão do Admin é preservada, permitindo a criação de múltiplos usuários em sequência sem perder o login.
 
 📂 Comandos Úteis de Debug

@@ -63,6 +63,7 @@ Admin: admin@teste.com | Senha: password
 Usuarios Criados: (email criado) | (senha criada)
 
 💡 Fluxos Implementados
+
 📩 Envio de E-mail (RabbitMQ)
 Ao cadastrar um novo usuário (seja via registro público ou pelo painel do Admin), um Job chamado EnviarEmailBoasVindas é despachado para a fila do RabbitMQ. O container laravel_worker processa essa tarefa e o e-mail aparece instantaneamente no Mailpit.
 
